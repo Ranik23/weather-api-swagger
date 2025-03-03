@@ -3,19 +3,25 @@
 package restapi
 
 import (
+	"context"
 	"crypto/tls"
 	"log"
 	"log/slog"
+	"net"
 	"net/http"
+	"time"
 
 	"weatherbot/api/restapi/operations"
 	"weatherbot/config"
 	"weatherbot/internal/handlers"
+	"weatherbot/internal/middlewares"
 	"weatherbot/internal/usecase"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/swag"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 //go:generate swagger generate server --target ../../api --name WeatherAPI --spec ../../docs/api.json --principal interface{}
@@ -30,7 +36,7 @@ func configureAPI(api *operations.WeatherAPIAPI) http.Handler {
 	
 	defer func() {
 		if err := recover(); err != nil {
-			slog.Error("failed", slog.Any("error", err))
+			slog.Error("panic caught", slog.Any("error", err))
 		}
 	}()
 
@@ -60,7 +66,30 @@ func configureAPI(api *operations.WeatherAPIAPI) http.Handler {
 
 	usecase := usecase.NewUseCaseImpl(cfg)
 
-	api.GetWeatherHandler = handlers.NewWeatherForecastHandler(usecase)
+	requests := prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_requests_total",
+			Help: "Total number of HTTP requests",
+		},
+		[]string{"method", "endpoint"},
+	)
+
+	duration := prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "http_duration_seconds",
+			Help:    "Histogram of HTTP request durations",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"method", "endpoint"},
+	)
+
+	prometheus.MustRegister(requests)
+	prometheus.MustRegister(duration)
+
+	api.GetWeatherHandler = handlers.NewWeatherForecastHandler(usecase, duration, requests)
+
+	//api.HandlerFor("/metrics", promhttp.Handler())
+
 		
 	api.PreServerShutdown = func() {
 		api.Logger("Shutting Down The Server!")
@@ -83,7 +112,13 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix".
 func configureServer(s *http.Server, scheme, addr string) {
+	s.ConnContext = func(ctx context.Context, c net.Conn) context.Context {
+		ctxTimeout, cancel := context.WithTimeout(ctx, 10 * time.Second)
+		defer cancel()
+		return ctxTimeout
+	}
 }
+
 
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
@@ -95,5 +130,11 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
-	return handler
+	mux := http.NewServeMux()
+
+	mux.Handle("/metrics", promhttp.Handler())
+	mux.Handle("/", middlewares.PanicMiddleWare(middlewares.LoggingMiddleware(handler)))
+	
+	return mux
 }
+
