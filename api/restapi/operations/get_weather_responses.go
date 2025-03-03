@@ -65,6 +65,11 @@ GetWeatherBadRequest Неверный запрос
 swagger:response getWeatherBadRequest
 */
 type GetWeatherBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *GetWeatherBadRequestBody `json:"body,omitempty"`
 }
 
 // NewGetWeatherBadRequest creates GetWeatherBadRequest with default headers values
@@ -73,12 +78,27 @@ func NewGetWeatherBadRequest() *GetWeatherBadRequest {
 	return &GetWeatherBadRequest{}
 }
 
+// WithPayload adds the payload to the get weather bad request response
+func (o *GetWeatherBadRequest) WithPayload(payload *GetWeatherBadRequestBody) *GetWeatherBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get weather bad request response
+func (o *GetWeatherBadRequest) SetPayload(payload *GetWeatherBadRequestBody) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetWeatherBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // GetWeatherInternalServerErrorCode is the HTTP code returned for type GetWeatherInternalServerError
@@ -90,6 +110,11 @@ GetWeatherInternalServerError Внутренняя ошибка сервера
 swagger:response getWeatherInternalServerError
 */
 type GetWeatherInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *GetWeatherInternalServerErrorBody `json:"body,omitempty"`
 }
 
 // NewGetWeatherInternalServerError creates GetWeatherInternalServerError with default headers values
@@ -98,10 +123,25 @@ func NewGetWeatherInternalServerError() *GetWeatherInternalServerError {
 	return &GetWeatherInternalServerError{}
 }
 
+// WithPayload adds the payload to the get weather internal server error response
+func (o *GetWeatherInternalServerError) WithPayload(payload *GetWeatherInternalServerErrorBody) *GetWeatherInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get weather internal server error response
+func (o *GetWeatherInternalServerError) SetPayload(payload *GetWeatherInternalServerErrorBody) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetWeatherInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

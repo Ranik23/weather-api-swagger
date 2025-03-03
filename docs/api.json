@@ -1,223 +1,108 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "Weather API",
-      "description": "API для получения информации о текущей погоде.",
-      "version": "1.0.0"
-    },
-    "host": "localhost:8080",
-    "basePath": "/v1",
-    "schemes": ["https"],
-    "paths": {
-      "/weather": {
-        "get": {
-          "summary": "Получить текущую погоду",
-          "description": "Возвращает текущие погодные данные для заданного города.",
-          "parameters": [
-            {
-              "name": "city",
-              "in": "query",
-              "required": true,
-              "type": "string",
-              "description": "Название города"
-            },
-            {
-              "name": "units",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "enum": ["metric", "imperial"],
-              "default": "metric",
-              "description": "Единицы измерения температуры. 'metric' для Цельсия, 'imperial' для Фаренгейта."
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успешный ответ с данными о погоде",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "city": {
-                    "type": "string",
-                    "description": "Название города"
-                  },
-                  "temperature": {
-                    "type": "number",
-                    "description": "Температура в указанном городе"
-                  },
-                  "feels_like": {
-                    "type": "number",
-                    "description": "Ощущаемая температура"
-                  },
-                  "humidity": {
-                    "type": "number",
-                    "description": "Влажность"
-                  },
-                  "wind_speed": {
-                    "type": "number",
-                    "description": "Скорость ветра"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "Краткое описание погоды"
-                  },
-                  "updated_at": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "Время последнего обновления данных"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Неверный запрос"
-            },
-            "500": {
-              "description": "Внутренняя ошибка сервера"
-            }
+  "swagger": "2.0",
+  "info": {
+    "title": "Weather API",
+    "description": "API для получения информации о текущей погоде.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/v1",
+  "schemes": ["https"],
+  "paths": {
+    "/weather": {
+      "get": {
+        "summary": "Получить текущую погоду",
+        "description": "Возвращает текущие погодные данные для заданного города.",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Название города"
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": ["metric", "imperial"],
+            "default": "metric",
+            "description": "Единицы измерения температуры. 'metric' для Цельсия, 'imperial' для Фаренгейта."
           }
-        }
-      },
-      "/weather/forecast/7days": {
-        "get": {
-          "summary": "Получить прогноз погоды на 7 дней",
-          "description": "Возвращает прогноз погоды на 7 дней для заданного города.",
-          "parameters": [
-            {
-              "name": "city",
-              "in": "query",
-              "required": true,
-              "type": "string",
-              "description": "Название города"
-            },
-            {
-              "name": "units",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "enum": ["metric", "imperial"],
-              "default": "metric",
-              "description": "Единицы измерения температуры. 'metric' для Цельсия, 'imperial' для Фаренгейта."
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успешный ответ с прогнозом погоды на 7 дней",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "city": {
-                    "type": "string",
-                    "description": "Название города"
-                  },
-                  "forecast": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "date": {
-                          "type": "string",
-                          "format": "date",
-                          "description": "Дата прогноза"
-                        },
-                        "temperature_min": {
-                          "type": "number",
-                          "description": "Минимальная температура"
-                        },
-                        "temperature_max": {
-                          "type": "number",
-                          "description": "Максимальная температура"
-                        },
-                        "description": {
-                          "type": "string",
-                          "description": "Краткое описание погоды"
-                        }
-                      }
-                    },
-                    "description": "Прогноз на следующие 7 дней"
-                  }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ с данными о погоде",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string",
+                  "description": "Название города"
+                },
+                "temperature": {
+                  "type": "number",
+                  "description": "Температура в указанном городе"
+                },
+                "feels_like": {
+                  "type": "number",
+                  "description": "Ощущаемая температура"
+                },
+                "humidity": {
+                  "type": "number",
+                  "description": "Влажность"
+                },
+                "wind_speed": {
+                  "type": "number",
+                  "description": "Скорость ветра"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Краткое описание погоды"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Время последнего обновления данных"
                 }
               }
-            },
-            "400": {
-              "description": "Неверный запрос"
-            },
-            "500": {
-              "description": "Внутренняя ошибка сервера"
             }
-          }
-        }
-      },
-      "/weather/forecast/30days": {
-        "get": {
-          "summary": "Получить прогноз погоды на 30 дней",
-          "description": "Возвращает прогноз погоды на 30 дней для заданного города.",
-          "parameters": [
-            {
-              "name": "city",
-              "in": "query",
-              "required": true,
-              "type": "string",
-              "description": "Название города"
-            },
-            {
-              "name": "units",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "enum": ["metric", "imperial"],
-              "default": "metric",
-              "description": "Единицы измерения температуры. 'metric' для Цельсия, 'imperial' для Фаренгейта."
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Успешный ответ с прогнозом погоды на 30 дней",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "city": {
-                    "type": "string",
-                    "description": "Название города"
-                  },
-                  "forecast": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "date": {
-                          "type": "string",
-                          "format": "date",
-                          "description": "Дата прогноза"
-                        },
-                        "temperature_min": {
-                          "type": "number",
-                          "description": "Минимальная температура"
-                        },
-                        "temperature_max": {
-                          "type": "number",
-                          "description": "Максимальная температура"
-                        },
-                        "description": {
-                          "type": "string",
-                          "description": "Краткое описание погоды"
-                        }
-                      }
-                    },
-                    "description": "Прогноз на следующие 30 дней"
-                  }
+          },
+          "400": {
+            "description": "Неверный запрос",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Описание ошибки"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Детализированное сообщение об ошибке"
                 }
               }
-            },
-            "400": {
-              "description": "Неверный запрос"
-            },
-            "500": {
-              "description": "Внутренняя ошибка сервера"
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Описание ошибки"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Детализированное сообщение об ошибке"
+                }
+              }
             }
           }
         }
       }
     }
   }
-  
+}

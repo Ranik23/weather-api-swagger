@@ -45,12 +45,6 @@ func NewWeatherAPIAPI(spec *loads.Document) *WeatherAPIAPI {
 		GetWeatherHandler: GetWeatherHandlerFunc(func(params GetWeatherParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetWeather has not yet been implemented")
 		}),
-		GetWeatherForecast30daysHandler: GetWeatherForecast30daysHandlerFunc(func(params GetWeatherForecast30daysParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetWeatherForecast30days has not yet been implemented")
-		}),
-		GetWeatherForecast7daysHandler: GetWeatherForecast7daysHandlerFunc(func(params GetWeatherForecast7daysParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetWeatherForecast7days has not yet been implemented")
-		}),
 	}
 }
 
@@ -89,10 +83,6 @@ type WeatherAPIAPI struct {
 
 	// GetWeatherHandler sets the operation handler for the get weather operation
 	GetWeatherHandler GetWeatherHandler
-	// GetWeatherForecast30daysHandler sets the operation handler for the get weather forecast30days operation
-	GetWeatherForecast30daysHandler GetWeatherForecast30daysHandler
-	// GetWeatherForecast7daysHandler sets the operation handler for the get weather forecast7days operation
-	GetWeatherForecast7daysHandler GetWeatherForecast7daysHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -172,12 +162,6 @@ func (o *WeatherAPIAPI) Validate() error {
 
 	if o.GetWeatherHandler == nil {
 		unregistered = append(unregistered, "GetWeatherHandler")
-	}
-	if o.GetWeatherForecast30daysHandler == nil {
-		unregistered = append(unregistered, "GetWeatherForecast30daysHandler")
-	}
-	if o.GetWeatherForecast7daysHandler == nil {
-		unregistered = append(unregistered, "GetWeatherForecast7daysHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -271,14 +255,6 @@ func (o *WeatherAPIAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/weather"] = NewGetWeather(o.context, o.GetWeatherHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/weather/forecast/30days"] = NewGetWeatherForecast30days(o.context, o.GetWeatherForecast30daysHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/weather/forecast/7days"] = NewGetWeatherForecast7days(o.context, o.GetWeatherForecast7daysHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

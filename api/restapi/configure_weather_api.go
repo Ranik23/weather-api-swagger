@@ -58,14 +58,10 @@ func configureAPI(api *operations.WeatherAPIAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	usecase := usecase.NewUseCaseImpl(nil, cfg)
+	usecase := usecase.NewUseCaseImpl(cfg)
 
 	api.GetWeatherHandler = handlers.NewWeatherForecastHandler(usecase)
-	
-	api.GetWeatherForecast30daysHandler = handlers.NewWeatherForecast30DaysHandler(usecase)
-	
-	api.GetWeatherForecast7daysHandler = handlers.NewWeatherForecast7DaysHandler(usecase)
-	
+		
 	api.PreServerShutdown = func() {
 		api.Logger("Shutting Down The Server!")
 	}

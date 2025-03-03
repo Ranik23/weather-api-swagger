@@ -62,6 +62,86 @@ func (o *GetWeather) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 }
 
+// GetWeatherBadRequestBody get weather bad request body
+//
+// swagger:model GetWeatherBadRequestBody
+type GetWeatherBadRequestBody struct {
+
+	// Описание ошибки
+	Error string `json:"error,omitempty"`
+
+	// Детализированное сообщение об ошибке
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get weather bad request body
+func (o *GetWeatherBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get weather bad request body based on context it is used
+func (o *GetWeatherBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWeatherBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWeatherBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res GetWeatherBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+// GetWeatherInternalServerErrorBody get weather internal server error body
+//
+// swagger:model GetWeatherInternalServerErrorBody
+type GetWeatherInternalServerErrorBody struct {
+
+	// Описание ошибки
+	Error string `json:"error,omitempty"`
+
+	// Детализированное сообщение об ошибке
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get weather internal server error body
+func (o *GetWeatherInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get weather internal server error body based on context it is used
+func (o *GetWeatherInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWeatherInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWeatherInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetWeatherInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 // GetWeatherOKBody get weather o k body
 //
 // swagger:model GetWeatherOKBody
